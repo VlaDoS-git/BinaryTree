@@ -32,6 +32,7 @@ public:
 	void preOrder(void) const;
 	void remove(T key);
 	const bool empty(void) const;
+	const bool search(T key) const;
 	const size_t size(void) const;
 private:
 	Branch<T>* root;
@@ -43,6 +44,7 @@ protected:
 	void inOrder(Branch<T>* leaf) const;
 	void preOrder(Branch<T>* leaf) const;
 	Branch<T>* remove(T key, Branch<T>* leaf);
+	Branch<T>* search(T key, Branch<T>* leaf) const;
 };
 /************************************************************************************************************/
 template<class T>
@@ -86,6 +88,12 @@ template<class T>
 const bool BinaryTree<T>::empty(void) const { return this->root != nullptr ? false : true; }
 /************************************************************************************************************/
 template<class T>
+const bool BinaryTree<T>::search(T key) const
+{
+	return search(key, this->root) ? true : false;
+}
+/************************************************************************************************************/
+template<class T>
 const size_t BinaryTree<T>::size(void) const { return this->_size; }
 /************************************************************************************************************/
 template<class T>
@@ -102,7 +110,7 @@ void BinaryTree<T>::insert(T data, Branch<T>* leaf)
 			leaf->left = new Branch<T>(data);
 		}
 	}
-	else
+	else if (data > leaf->data)
 	{
 		if (leaf->right != nullptr)
 		{
@@ -172,6 +180,15 @@ Branch<T>* BinaryTree<T>::remove(T key, Branch<T>* leaf)
 		delete tmp;
 	}
 	return leaf;
+}
+/************************************************************************************************************/
+template<class T>
+Branch<T>* BinaryTree<T>::search(T key,Branch<T>* leaf) const
+{
+	if (leaf == nullptr)        return nullptr;
+	else if (key == leaf->data) return leaf;
+	else if (key < leaf->data)  return search(key, leaf->left);
+	else if (key > leaf->data)  return search(key, leaf->right);
 }
 /************************************************************************************************************/
 #endif // !_BINARYTREE_
